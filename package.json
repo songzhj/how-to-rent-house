@@ -1,0 +1,25 @@
+{
+  "name": "how-to-rent-house",
+  "version": "1.0.0",
+  "description": "songzhj's graduation design, a crawler program to statistical analysis renting-house.",
+  "main": "bin/start.js",
+  "bin": {
+    "how-to-rent-house": "start.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/songzhj/how-to-rent-house.git"
+  },
+  "author": "@songzhj",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/songzhj/how-to-rent-house/issues"
+  },
+  "homepage": "https://github.com/songzhj/how-to-rent-house#readme",
+  "dependencies": {
+    "cheerio": "^0.22.0"
+  }
+}
