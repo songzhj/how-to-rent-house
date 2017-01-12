@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/songzhj/how-to-rent-house#readme",
   "dependencies": {
-    "cheerio": "^0.22.0"
+    "cheerio": "^0.22.0",
+    "mongoose": "^4.7.6"
   }
 }
