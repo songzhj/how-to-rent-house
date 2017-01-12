@@ -7,6 +7,10 @@
 const cheerio = require("cheerio");
 
 class Pretreatment {
+    /**
+     * @param   {String}   houseListSelector 房屋列表选择器
+     * @param   {json}   options           解析数据的配置
+     */
     constructor(houseListSelector, options) {
         this.houseListSelector = houseListSelector;
         this.options = options;
@@ -18,6 +22,11 @@ class Pretreatment {
         };
     }
 
+    /**
+     * 从爬取到的数据中解析有效数据
+     * @param   {String}   data 爬取到的数据
+     * @return  {json}        解析后的json数据
+     */
     resolveData(data) {
         this.$ = cheerio.load(data[0]);
         let resData = {};
@@ -32,7 +41,6 @@ class Pretreatment {
                 let type = options[item].type;
                 house[item] = this.TYPE[type].bind(this)($house, options[item]);
             }
-            console.log(house);
             resData.houses.push(house);
         });
         return resData;
