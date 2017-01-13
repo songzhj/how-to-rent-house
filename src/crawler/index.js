@@ -51,6 +51,7 @@ class Crawler {
                     callback(house);
                 } else {
                     this.isFinish = true;
+                    callback(null);
                 }
             })
         });

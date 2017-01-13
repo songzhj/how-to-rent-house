@@ -3,7 +3,7 @@ const config = {
     PAGE_START: 0,
     MDB_URL: "mongodb://test:1725@mdb.songzhj.com:27017/test",
     HOUSE_LIST_REG: /<ul id="houseList">([.\s\S]*)<\/ul>\s*(?=<div class="pages")/g,
-    HOUSE_LIST_SELECTOR: "li.clearfix",
+    HOUSE_LIST_ITEM_SELECTOR: "li.clearfix",
     HOUSE_INFO_REG: {
     	_id: {name: ".txt>h3>a", reg: /\d+(?=\.html)/, type: "attr", attr: "href"},
     	title: {name: ".txt>h3>a", reg: /[\s\S]*/, type: "text"},
@@ -17,6 +17,20 @@ const config = {
     	tag: {name: ".room_tags>span", reg: /[\s\S]*/, type: "array"},
     	style: {name: ".room_tags .style", reg: /[\s\S]*/, type: "text"},
     	price: {name: ".price", reg: /\d+/, type: "text"}
+    },
+    MONGO_SCHEMA: {
+    	_id: Number,
+    	title: String,
+    	address_main: String,
+    	address_detail: String,
+    	area: Number,
+    	floor: String,
+    	household: String,
+    	rent_type: String,
+    	distance: String,
+    	tag: [String],
+    	style: String,
+    	price: Number
     }
 }
 module.exports = config;
