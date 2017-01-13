@@ -19,11 +19,12 @@ function persistence(mdbUrl, mongoSchema, houseSelector, houseOptions) {
     let pretreatment = new Pretreatment(houseSelector, houseOptions);
     let mongo = new Mongo(mdbUrl);
     let today = new Date().toJSON().match(/\d{4}-\d{2}-\d{2}/)[0].replace(/-/g, "_");
-    let houseModel = mongo.schema("House", mongoSchema).model("H_" + today);
+    let houseModel = mongo.schema("House", mongoSchema).model("h_" + today);
 
     return (data) => {
         if (!data) {
             mongo.close();
+            console.log("about finishing", new Date().toLocaleString());
             return;
         }
         let houseList = pretreatment.resolveData(data);
@@ -32,7 +33,7 @@ function persistence(mdbUrl, mongoSchema, houseSelector, houseOptions) {
                 if (err) {
                     console.log(err.toString());
                 } else {
-                    console.log("success");
+                    console.log("success", new Date().toLocaleString());
                 }
             });
         }
