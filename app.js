@@ -8,3 +8,4 @@ let persistenceCallback = persistence(config.MDB_URL,
                                                             config.HOUSE_LIST_ITEM_SELECTOR,
                                                             config.HOUSE_INFO_REG);
 crawler.start(persistenceCallback, config.HOUSE_LIST_REG);
+//test push
