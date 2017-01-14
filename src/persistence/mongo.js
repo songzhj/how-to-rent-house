@@ -5,42 +5,80 @@
  * @Date    2017-01-12
  */
 const mongoose = require("mongoose");
+const CachePool = require("./cachePool.js");
 
 class Mongo {
     /**
      * @param   {String}   url 数据库连接url
      */
-    constructor(url) {
+    constructor(url, maxSize) {
+        this.url = url;
+        this.cachePool = new CachePool(maxSize);
         mongoose.connect(url);
         this.db = mongoose.connection;
+        this.db.on("open", () => {console.log("[Mongo open]"); isConnection = true; mongoSave.bind(this)();});
+        this.db.on("error", (err) => {mongoError.bind(this)(err);});
     }
 
     close() {
-        this.db.close();
+        let intervalClose = () => {
+            if (this.cachePool.size === 0) {
+                this.db.close();
+                return;
+            }
+            setTimeout(intervalClose, 5000);
+        }
+        intervalClose();
     }
 
-    schema(name, schema) {
-        let _name = name + "SCHEMA";
+    schema(schema) {
         if (schema) {
-            this[_name] = mongoose.Schema(schema);
-            this[_name].model = (collectionName) => _model.bind(this)(collectionName, this[_name]);
-            return this[_name];        
-        } else {
-            return this[_name];
+            this.schema = mongoose.Schema(schema);
         }
+        return this.schema;
     }
 
     model(collectionName) {
-        let _name = collectionName + "MODEL";
-        return this[_name];
+        if (collectionName) {
+            this.model = mongoose.model(collectionName, this.schema);
+        }
+        return this.model;
+    }
+
+    save(data) {
+        if (this.cachePool.size === 0) {
+            setTimeout(mongoSave.bind(this), 2000);
+        }
+        return this.cachePool.add(data);
     }
 
 }
 //私有
-function _model(collectionName, schema) {
-    let _name = collectionName + "MODEL";
-    this[_name] = mongoose.model(collectionName, schema);
-    return this[_name];
+let isConnection = false; //连接锁
+function mongoSave() {
+    let model = this.model;
+    let cache = this.cachePool;
+    let saveData;
+    let writeToDB = () => {
+        if (isConnection && (saveData = cache.out())) {
+            model.create(saveData, (err, model) => {
+                if (err) {
+                    console.log("[create error]: ", err.errmsg);
+                } else {
+                    console.log("[success]: ", new Date().toLocaleString());
+                }
+            });
+            setTimeout(writeToDB, 400);
+        }
+    }
+    setTimeout(writeToDB, 0);
 }
-
+function mongoError(err) {
+    isConnection = false;
+    console.log("[MongoError]: ", new Date().toLocaleString(), ": " + err.toString());
+    this.db.close();
+    setTimeout(() => {
+        mongoose.connect(this.url);
+    }, 100);
+}
 module.exports = Mongo;

@@ -12,7 +12,7 @@ class Crawler {
      * @param  {String} url       爬取目标url
      * @param  {Number} pageStart 开始页
      */
-    constructor(url, pageStart = 0) {
+    constructor(url, pageStart = 1, minPageEnd = Number.MAX_VALUE) {
         if (!url) return;
         if (Crawler.instance) {
             return Crawler.instance;
@@ -21,9 +21,11 @@ class Crawler {
             Crawler.instance = instance;
             instance.url = url;
             instance.pageStart = pageStart;
+            instance.minPageEnd = minPageEnd;
             instance.index = pageStart;
             instance.isFinish = false;
             instance.intervalTime = 1000;
+            instance.failedTime = 1;
             return instance;
         }
     }
@@ -48,25 +50,44 @@ class Crawler {
             res.on("end", () => {
                 let house = page.match(regex);
                 if (house) {
-                    callback(house);
+                    if (!callback(house, url)) {
+                        console.log("[callback false]:", this.failedTime);
+                        this.isFinish = true;
+                        setTimeout(() => {
+                            this.isFinish = false;
+                            dida.bind(this)(callback, regex);
+                        }, this.failedTime * (this.intervalTime + 1000));
+                        this.failedTime *= 2;
+                        return;
+                    }
+                    this.failedTime = 1;
                 } else {
-                    this.isFinish = true;
-                    callback(null);
+                    this.isFinish = this.index > this.minPageEnd;
+                    if (this.Finish) {
+                        callback(null, url);
+                    } else {
+                        --this.index;
+                    }
                 }
             })
+        }).on("error", (err) => {
+            --this.index;
+            console.log("[httpRequest Expection]:", "page Index=" + this.index, err.toString());
         });
     }
 
     start(callback, regex = /[\s\S]*/) {
-        let url = this.url;
-        let dida = () => {
-            if (this.isFinish) return;
-            this.httpRequest(url + this.index, regex, callback);
-            ++this.index;
-            setTimeout(dida, this.intervalTime);
-        }
-        dida(this.index);
+        dida.bind(this)(callback, regex);
     }
+}
+//私有
+function dida(callback, regex) {
+    console.log("[dida]: index ", this.index, this.isFinish);
+    if (this.isFinish) return;
+    this.httpRequest(this.url + this.index, regex, callback);
+    ++this.index;
+    let human = this.index % 10 === 0 ? 30000 : 0;
+    setTimeout(dida.bind(this, callback, regex), this.intervalTime + human);
 }
 
 module.exports = Crawler;
