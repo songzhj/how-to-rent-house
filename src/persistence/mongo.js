@@ -65,7 +65,7 @@ function mongoSave() {
                 if (err) {
                     console.log("[create error]: ", err.errmsg);
                 } else {
-                    console.log("[success]: ", new Date().toLocaleString());
+                    console.log("[success]: ", new Date().toJSON());
                 }
             });
             setTimeout(writeToDB, 400);
@@ -75,7 +75,7 @@ function mongoSave() {
 }
 function mongoError(err) {
     isConnection = false;
-    console.log("[MongoError]: ", new Date().toLocaleString(), ": " + err.toString());
+    console.log("[MongoError]: ", new Date().toJSON(), ": " + err.toString());
     this.db.close();
     setTimeout(() => {
         mongoose.connect(this.url);

@@ -18,7 +18,7 @@ const Mongo = require("./mongo.js")
 function persistence(mdbUrl, mongoSchema, houseSelector, houseOptions) {
     let pretreatment = new Pretreatment(houseSelector, houseOptions);
     let mongo = new Mongo(mdbUrl, 150);
-    let today = new Date().toLocaleString().match(/\d{4}-\d{2}-\d{2}/)[0].replace(/-/g, "_");
+    let today = new Date().toJSON().match(/\d{4}-\d{2}-\d{2}/)[0].replace(/-/g, "_");
     mongo.schema(mongoSchema)
     mongo.model("h_" + today);
 
@@ -26,7 +26,7 @@ function persistence(mdbUrl, mongoSchema, houseSelector, houseOptions) {
         if (!data) {
             closeDelay = setTimeout(() => {
                 mongo.close();
-                console.log("[[about finishing]]: ", new Date().toLocaleString(), otherInfo[0], data);
+                console.log("[[about finishing]]: ", new Date().toJSON(), otherInfo[0], data);
             }, 30 * 1000);
             return;
         }
@@ -37,7 +37,7 @@ function persistence(mdbUrl, mongoSchema, houseSelector, houseOptions) {
         let houseList = pretreatment.resolveData(data).houses;
         let isSaved = mongo.save(houseList.concat(lastData));
         if (isSaved) {
-            console.log("[Crawler]: ", new Date().toLocaleString(), otherInfo[0]);
+            console.log("[Crawler]: ", new Date().toJSON(), otherInfo[0]);
             return true;
         } else {
             console.log("[CachePool Full]: waiting", lastData.length());
