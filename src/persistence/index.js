@@ -17,27 +17,37 @@ const Mongo = require("./mongo.js")
  */
 function persistence(mdbUrl, mongoSchema, houseSelector, houseOptions) {
     let pretreatment = new Pretreatment(houseSelector, houseOptions);
-    let mongo = new Mongo(mdbUrl);
+    let mongo = new Mongo(mdbUrl, 150);
     let today = new Date().toJSON().match(/\d{4}-\d{2}-\d{2}/)[0].replace(/-/g, "_");
-    let houseModel = mongo.schema("House", mongoSchema).model("h_" + today);
+    mongo.schema(mongoSchema)
+    mongo.model("h_" + today);
 
-    return (data) => {
+    return (data, ...otherInfo) => {
         if (!data) {
-            mongo.close();
-            console.log("about finishing", new Date().toLocaleString());
+            closeDelay = setTimeout(() => {
+                mongo.close();
+                console.log("[[about finishing]]: ", new Date().toJSON(), otherInfo[0], data);
+            }, 30 * 1000);
             return;
         }
-        let houseList = pretreatment.resolveData(data);
-        for (let index in houseList) {
-            houseModel.create(houseList[index], (err, model) => {
-                if (err) {
-                    console.log(err.toString());
-                } else {
-                    console.log("success", new Date().toLocaleString());
-                }
-            });
+        if (closeDelay) {
+            clearTimeout(closeDelay);
+            closeDelay = null;
+        }
+        let houseList = pretreatment.resolveData(data).houses;
+        let isSaved = mongo.save(houseList.concat(lastData));
+        if (isSaved) {
+            console.log("[Crawler]: ", new Date().toJSON(), otherInfo[0]);
+            return true;
+        } else {
+            console.log("[CachePool Full]: waiting", lastData.length());
+            lastData = lastData.concat(houseList);
+            return false;
         }
     }
 }
+//私有
+let closeDelay = null;
+let lastData = [];
 
 module.exports = persistence;
