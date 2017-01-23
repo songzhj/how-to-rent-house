@@ -1,7 +1,7 @@
 const config = {
     CRAWLER_URL: "http://www.ziroom.com/z/nl/z3.html?p=",
     PAGE_START: 0,
-    MDB_URL: "mongodb://test:1725@mdb.songzhj.com:27017/test",
+    MDB_URL: "mongodb://songzhj:1704@mdb.songzhj.com:27017/houseInfo",
     HOUSE_LIST_REG: /<ul id="houseList">([.\s\S]*)<\/ul>\s*(?=<div class="pages")/g,
     HOUSE_LIST_ITEM_SELECTOR: "li.clearfix",
     HOUSE_INFO_REG: {
