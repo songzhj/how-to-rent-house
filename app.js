@@ -4,7 +4,6 @@
  * @license GPL-3.0
  * @Date    2017-01-14
  */
-() => {}
 const config = require("./config.js")
 const Crawler = require("./src/crawler");
 const persistence = require("./src/persistence");
