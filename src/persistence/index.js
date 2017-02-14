@@ -15,8 +15,8 @@ const Mongo = require("./mongo.js")
  * @param   {json}   houseOptions  房屋信息配置项
  * @return  {function}                 执行持久化回调函数
  */
-function persistence(mdbUrl, mongoSchema, houseSelector, houseOptions) {
-    let pretreatment = new Pretreatment(houseSelector, houseOptions);
+function persistence(mdbUrl, mongoSchema) {
+    let pretreatment = new Pretreatment();
     let mongo = new Mongo(mdbUrl, 150);
     let today = new Date().toJSON().match(/\d{4}-\d{2}-\d{2}/)[0].replace(/-/g, "_");
     mongo.schema(mongoSchema)

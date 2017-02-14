@@ -4,22 +4,10 @@
  * @license GPL-3.0
  * @Date    2017-01-12
  */
-const cheerio = require("cheerio");
 
 class Pretreatment {
-    /**
-     * @param   {String}   houseListSelector 房屋列表选择器
-     * @param   {json}   options           解析数据的配置
-     */
-    constructor(houseListSelector, options) {
-        this.houseListSelector = houseListSelector;
-        this.options = options;
-        this.$ = null;
-        this.TYPE = {
-            "attr": this.handleAttr,
-            "text": this.handleText,
-            "array": this.handleArray
-        };
+    constructor() {
+        this.data = null;
     }
 
     /**
@@ -28,41 +16,29 @@ class Pretreatment {
      * @return  {json}        解析后的json数据
      */
     resolveData(data) {
-        this.$ = cheerio.load(data[0]);
+        this.data = data.data;
         let resData = {};
         resData.houses = [];
-        let $ = this.$;
-        let $li = $(this.houseListSelector);
-        $li.each((index, ele) => {
+        this.data.forEach((value, index) => {
             let house = {};
-            let options = this.options;
-            let $house = $(ele);
-            for (let item in options) {
-                let type = options[item].type;
-                house[item] = this.TYPE[type].bind(this)($house, options[item]);
-            }
+            house._id = value.id;
+            house.title = value.name;
+            house.address_main = value.resblock_name;
+            house.address_detail = value.resblock_name;
+            house.area = value.area;
+            house.floor = value.floor + "/" + value.floor_total;
+            house.household = value.bedroom + "室" + value.parlor + "厅";
+            house.rent_type = value.type === 0 ? "整" : "合";
+            house.distance = value.subway_station_info;
+            house.tag = [];
+            house.style = "";
+            house.price = value.price;
+            value.tags.forEach((value, index) => {
+                house.tag.push(value.title);
+            });
             resData.houses.push(house);
         });
         return resData;
-    }
-
-    handleAttr(data, {name:selector, reg:regex, attr:attr}) {
-        let res = data.find(selector).attr(attr).match(regex);
-        return res ? res[0] : "";
-    }
-
-    handleText(data, {name:selector, reg:regex, attr:attr}) {
-        let res = data.find(selector).text().match(regex);
-        return res ? res[0] : "";
-    }
-
-    handleArray(data, {name:selector, reg:regex, attr:attr}) {
-        let res = [];
-        data.find(selector).each((index, ele) => {
-            let item = this.$(ele).text().match(regex);
-            res.push(item ? item[0] : "");
-        });
-        return res;
     }
 }
 
