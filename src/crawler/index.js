@@ -48,9 +48,9 @@ class Crawler {
                 page += chunk;
             });
             res.on("end", () => {
-                let house = page.match(regex);
-                if (house) {
-                    if (!callback(house, url)) {
+                if (page) {
+                    let pageJson = JSON.parse(page);
+                    if (!callback(pageJson, url)) {
                         console.log("[callback false]:", this.failedTime);
                         this.isFinish = true;
                         setTimeout(() => {
