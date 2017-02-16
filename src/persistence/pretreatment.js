@@ -37,7 +37,7 @@ class Pretreatment {
                 resData.houses.push(house);
             });      
         } catch(e) {
-            console.log(e.toString());
+            console.warn(e.toString());
             return resData;
         }
         return resData;
