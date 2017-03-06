@@ -48,10 +48,11 @@ class Crawler {
                 page += chunk;
             });
             res.on("end", () => {
-                if (page) {
-                    let pageJson = JSON.parse(page);
-                    if (!callback(pageJson, url)) {
-                        console.log("[callback false]:", this.failedTime);
+                let pageJson = JSON.parse(page);
+                let data = pageJson.data;
+                if (data.length !== 0) {
+                    if (!callback(data, url)) {
+                        console.log("[callback]:", this.failedTime);
                         this.isFinish = true;
                         setTimeout(() => {
                             this.isFinish = false;
@@ -62,10 +63,11 @@ class Crawler {
                     }
                     this.failedTime = 1;
                 } else {
-                    this.isFinish = this.index > this.minPageEnd;
-                    if (this.Finish) {
+                    if (this.failedTime > 3) {
                         callback(null, url);
+                        this.isFinish = true;
                     } else {
+                        ++this.failedTime;
                         --this.index;
                     }
                 }
@@ -86,8 +88,8 @@ function dida(callback, regex) {
     if (this.isFinish) return;
     this.httpRequest(this.url + this.index, regex, callback);
     ++this.index;
-    let human = this.index % 10 === 0 ? 30000 : 0;
-    setTimeout(dida.bind(this, callback, regex), this.intervalTime + human);
+    let human = this.index % 10 === 0 ? parseInt(Math.random() * 30000) : 0;
+    setTimeout(dida.bind(this, callback, regex), this.intervalTime + parseInt(Math.random() * 5000) + human);
 }
 
 module.exports = Crawler;

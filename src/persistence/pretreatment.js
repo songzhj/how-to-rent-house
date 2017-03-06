@@ -13,7 +13,7 @@ class Pretreatment {
      * @return  {json}        解析后的json数据
      */
     resolveData(data) {
-        let houseData = data.data;
+        let houseData = data;
         let resData = {};
         resData.houses = [];
         try {

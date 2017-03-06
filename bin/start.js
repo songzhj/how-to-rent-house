@@ -1,6 +1,6 @@
 let app = require("../app.js");
 let startPage = 1;
-let minEnd = Number.MAX_VALUE;
+let minEnd = 1;
 process.argv.forEach((val, index, array) => {
     if (val === "--start") {
         startPage = process.argv[index + 1];
