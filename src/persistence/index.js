@@ -24,15 +24,8 @@ function persistence(mdbUrl, mongoSchema) {
 
     return (data, ...otherInfo) => {
         if (!data) {
-            closeDelay = setTimeout(() => {
-                mongo.close();
-                console.log("[[about finishing]]: ", new Date().toJSON(), otherInfo[0], data);
-            }, 30 * 1000);
+            mongo.close();
             return;
-        }
-        if (closeDelay) {
-            clearTimeout(closeDelay);
-            closeDelay = null;
         }
         let houseList = pretreatment.resolveData(data).houses;
         let isSaved = mongo.save(houseList.concat(lastData));
@@ -47,7 +40,6 @@ function persistence(mdbUrl, mongoSchema) {
     }
 }
 //私有
-let closeDelay = null;
 let lastData = [];
 
 module.exports = persistence;

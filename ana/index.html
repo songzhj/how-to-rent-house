@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ziroom</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/3.5.0/echarts.common.js"></script>
+    <style>
+        #c {
+            margin: 50px auto;
+            width: 1350px;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div id="c"></div>
+    <script src="./info.js"></script>
+    <script>
+        var myChart = echarts.init(document.getElementById('c'));
+        option = {
+            title: {
+                text: '日平均房价(' + dataX[0] + '-' + dataX[dataX.length - 1] + ')'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['price']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel :{  
+                    interval:0   
+                },
+                boundaryGap: false,
+                data: dataX
+                // data: []
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                
+                {
+                    itemStyle : { normal: {label : {show: true}}},
+                    name:'price',
+                    type:'line',
+                    stack: '总量',
+                    data: dataY
+                }
+            ]
+        };
+        myChart.setOption(option);
+    </script>
+</body>
+</html>
