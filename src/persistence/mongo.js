@@ -6,6 +6,7 @@
  */
 const mongoose = require("mongoose");
 const CachePool = require("./cachePool.js");
+const RecommendSys = require("../recommend/index");
 
 class Mongo {
     /**
@@ -55,6 +56,7 @@ class Mongo {
 }
 //私有
 let isConnection = false; //连接锁
+let recommendSys = new RecommendSys();
 function mongoSave() {
     let model = this.model;
     let cache = this.cachePool;
@@ -66,6 +68,7 @@ function mongoSave() {
                     console.log("[create error]: ", err.errmsg);
                 } else {
                     console.log("[success]: ", new Date().toJSON());
+                    recommendSys.run(saveData);
                 }
             });
             setTimeout(writeToDB, 400);

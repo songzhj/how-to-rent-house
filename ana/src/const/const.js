@@ -14,9 +14,9 @@ module.exports = {
         price: Number
     },
     CRITERIA: {
-        // "tag":"独立卫生间",
-        // title:/天通西苑/,
+        "tag":"独立卫生间",
+        title:/天通西苑/,
         rent_type: "合",
-        "distance": /苏州街/
+        // "distance": /苏州街/
     }
 };

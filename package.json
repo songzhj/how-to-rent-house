@@ -21,6 +21,8 @@
   "homepage": "https://github.com/songzhj/how-to-rent-house#readme",
   "dependencies": {
     "cheerio": "^0.22.0",
-    "mongoose": "^4.7.6"
+    "mongoose": "^4.7.6",
+    "node-fetch": "^1.6.3",
+    "nodemailer": "^4.0.1"
   }
 }
