@@ -24,7 +24,6 @@ class RecommendSys {
 
     async run(house) {
         let resultList = await this.recommend.match(house, personalConfig);
-        console.log(resultList);
         for (let i in resultList) {
             let key = resultList[i].person.key;
             this.resultCachePool[key].push(resultList[i]);

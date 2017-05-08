@@ -15,23 +15,27 @@ class Recommend {
             let result = recommendHouse(house, customizations);
             return result;
         } catch (err) {
-            console.error(err.toString());
+            console.error(err);
         }
     }
 }
 
 async function recommendHouse(house, customizations) {
-    let houseLocation = await getPlace(house.address_detail);
-    let suitableHouse = [];
-    for (let i in customizations) {
-        let location = await getPlace(customizations[i].place);
-        let duration = await getDurationTime(houseLocation, location);
-        if (duration < customizations[i].expectedTime) {
-            let temp = {person: customizations[i], house: house, duration: duration};
-            suitableHouse.push(temp);
+    try {
+        let houseLocation = await getPlace(house.address_detail);
+        let suitableHouse = [];
+        for (let i in customizations) {
+            let location = await getPlace(customizations[i].place);
+            let duration = await getDurationTime(houseLocation, location);
+            if (duration < customizations[i].expectedTime) {
+                let temp = {person: customizations[i], house: house, duration: duration};
+                suitableHouse.push(temp);
+            }
         }
+        return suitableHouse;
+    } catch(err) {
+        console.error(err);
     }
-    return suitableHouse;
 }
 
 async function getPlace(place) {
@@ -49,18 +53,18 @@ async function getPlace(place) {
         let location = json.results && json.results[0] && json.results[0].location;
         return location;
     } catch (err) {
-        console.error(err.toString());
+        console.error(err);
     }
 }
 
 async function getDurationTime(houseLocation, personalLocation) {
-    let param = {
-        origin: `${houseLocation.lat},${houseLocation.lng}`,
-        destination: `${personalLocation.lat},${personalLocation.lng}`,
-        ak: 'nvW8jb4eV8fKyTwrGqQnPv0Zol2lXZTV'
-    };
-    let url = DIRECTION_URL + stringfy(param);
     try {
+        let param = {
+            origin: `${houseLocation.lat},${houseLocation.lng}`,
+            destination: `${personalLocation.lat},${personalLocation.lng}`,
+            ak: 'nvW8jb4eV8fKyTwrGqQnPv0Zol2lXZTV'
+        };
+        let url = DIRECTION_URL + stringfy(param);
         let res = await fetch(url);
         let json = await res.json();
         let direction = json.result && json.result.routes && json.result.routes[0];
