@@ -35,6 +35,7 @@ async function recommendHouse(house, customizations) {
         return suitableHouse;
     } catch(err) {
         console.error(err);
+        console.error('recommenHouse：', house);
     }
 }
 
@@ -58,6 +59,9 @@ async function getPlace(place) {
 }
 
 async function getDurationTime(houseLocation, personalLocation) {
+    if (!houseLocation) {
+        return Number.MAX_SAFE_INTEGER;
+    }
     try {
         let param = {
             origin: `${houseLocation.lat},${houseLocation.lng}`,
