@@ -25,6 +25,7 @@ function persistence(mdbUrl, mongoSchema) {
     return (data, ...otherInfo) => {
         if (!data) {
             mongo.close();
+            process.exit();
             return;
         }
         let houseList = pretreatment.resolveData(data).houses;
