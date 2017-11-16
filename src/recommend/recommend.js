@@ -28,7 +28,8 @@ async function recommendHouse(house, customizations) {
             let location = await getPlace(customizations[i].place);
             let duration = await getDurationTime(houseLocation, location);
             if (durationCondition(duration, customizations[i]) &&
-                priceCondition(house.price, customizations[i])) {
+                priceCondition(house.price, customizations[i]) &&
+		toiletCondition(house.tag)) {
                 let temp = {person: customizations[i], house: house, duration: duration};
                 suitableHouse.push(temp);
             }
@@ -87,6 +88,10 @@ function durationCondition(duration, customization) {
 function priceCondition(price, customization) {
     let monthPrice = price > 200 ? price : price * 30;
     return monthPrice < customization.price;
+}
+
+function toiletCondition(tag) {
+    return tag.includes('独立卫生间');
 }
 
 function stringfy(param) {
