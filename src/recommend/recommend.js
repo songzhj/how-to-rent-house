@@ -87,7 +87,7 @@ function durationCondition(duration, customization) {
 
 function priceCondition(price, customization) {
     let monthPrice = price > 200 ? price : price * 30;
-    return monthPrice < customization.price;
+    return monthPrice * 1.1 < customization.price;
 }
 
 function toiletCondition(tag) {

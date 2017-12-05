@@ -27,7 +27,7 @@ class RecommendSys {
         for (let i in resultList) {
             let key = resultList[i].person.key;
             this.resultCachePool[key].push(resultList[i]);
-            if (this.resultCachePool[key].length >= 10) {
+            if (this.resultCachePool[key].length >= 3) {
                 this.mail.send(this.resultCachePool[key], house);
                 this.resultCachePool[key] = [];
             }
