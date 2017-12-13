@@ -19,7 +19,7 @@ function run(sDate) {
         console.log(date);
         let house = mongoose.model(date, houseSchema);
         promiseArr.push(house.find(config.CRITERIA));
-        dataX.push(_.getFullMonth(now) + _.getFullDate(now));
+        dataX.push('' + _.getFullMonth(now) + _.getFullDate(now));
     }
     return promiseArr;
 }
@@ -32,8 +32,9 @@ function handleRes(data, i) {
     }
 
     count /= data.length;
+    console.log(data.length);
     if (!isNaN(count)) {
-        dataY.push(parseInt(count * 1.08));
+        dataY.push(parseInt(count * 1.1));
     } else {
         dataX.splice(i, 1);
     }
@@ -41,7 +42,10 @@ function handleRes(data, i) {
 
 mongoose.connect('mongodb://songzhj:1704@mdb.songzhj.com:27017/houseInfo');
 let houseSchema = mongoose.Schema(config.MONGO_SCHEMA);
-Promise.all(run(new Date('2017-02-14')))
+let date = new Date();
+date.setMonth(date.getMonth() - 1);
+console.log(date);
+Promise.all(run(date))
 .then((values) => {
     for (let i in values) {
         handleRes(values[i], i);
