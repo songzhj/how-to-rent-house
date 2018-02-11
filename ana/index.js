@@ -7,7 +7,7 @@ let dataX = [];
 let dataY = [];
 
 function getModelName(now) {
-    return 'h_2017_' + _.getFullMonth(now) + '_' + _.getFullDate(now);
+    return 'h_' + now.getFullYear() + '_' + _.getFullMonth(now) + '_' + _.getFullDate(now);
 }
 
 function run(sDate) {
@@ -30,7 +30,7 @@ function handleRes(data, i) {
     for (let item of data) {
         count += item.price;
     }
-
+//console.log(data[0]);
     count /= data.length;
     console.log(data.length);
     if (!isNaN(count)) {
@@ -40,7 +40,7 @@ function handleRes(data, i) {
     }
 }
 
-mongoose.connect('mongodb://songzhj:1704@mdb.songzhj.com:27017/houseInfo');
+mongoose.connect('mongodb://songzhj:1704@mdb.songzhj.com:27017/houseInfo?connectTimeoutMS=20000&socketTimeoutMS=60000');
 let houseSchema = mongoose.Schema(config.MONGO_SCHEMA);
 let date = new Date();
 date.setMonth(date.getMonth() - 1);
