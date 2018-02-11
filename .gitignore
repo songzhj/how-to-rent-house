@@ -38,3 +38,4 @@ jspm_packages
 
 # config file
 config.js
+src/recommend/recommend.js
