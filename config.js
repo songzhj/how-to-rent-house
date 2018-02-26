@@ -1,7 +1,7 @@
 const config = {
     CRAWLER_URL: "http://www.webapi.ziroom.com/v6/room/list.json?sign=0cb91607b40b507e3af81e4e45b5851d&timestamp=1487056934&os=android%3A6.0&app_version=5.0.4&imei=862452030218085&city_code=110000&page=",
     PAGE_START: 0,
-    MDB_URL: "",
+    MDB_URL: "mongodb://username:password@host:port/houseInfo",
     SENDER_AUTH: {
         user: "",
         pass: ""
